@@ -3,15 +3,16 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 import torch.nn.functional as F
 
+
 class DeepSeekModel(GenerativeModel):
     """
     DeepSeek model placeholder.
-    
-    Initially uses GPT-2 as a small test model. Can later
+
+    Initially uses deepseek-ai/deepseek-llm-7b-base as a small test model. Can later
     switch to DeepSeek 7B base for production.
     """
 
-    MODEL_NAME = "gpt2"
+    MODEL_NAME = "deepseek-ai/deepseek-llm-7b-base"
 
     def __init__(self, **kwargs):
         self.tokenizer = None
@@ -29,7 +30,7 @@ class DeepSeekModel(GenerativeModel):
         )
         self.model = AutoModelForCausalLM.from_pretrained(
             self.MODEL_NAME,
-            torch_dtype=torch.float32,
+            device_map="auto",   
             trust_remote_code=True
         ).to("cpu")
         self.initialized = True
@@ -92,3 +93,4 @@ class DeepSeekModel(GenerativeModel):
         # Sort by similarity (highest first)
         scores.sort(key=lambda x: x["score"], reverse=True)
         return scores
+ 
